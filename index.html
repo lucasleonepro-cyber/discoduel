@@ -436,7 +436,7 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
     </div>
     <div class="albums-block" id="statsWrap">
       <div style="display:flex;flex-direction:column;gap:6px">
-        <p class="eyebrow">Albums, du préféré au moins aimé</p>
+        <p class="eyebrow" id="albumsTitle">Albums, du préféré au moins aimé</p>
         <p class="note">Classés par rang moyen de leurs titres.</p>
       </div>
       <div class="top10" id="top10"></div>
@@ -448,7 +448,7 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
     </div>
   </section>
 
-  <footer class="credits">Données : <a href="https://musicbrainz.org" target="_blank" rel="noopener">MusicBrainz</a> (base ouverte, CC0) · Pochettes : <a href="https://coverartarchive.org" target="_blank" rel="noopener">Cover Art Archive</a></footer>
+  <footer class="credits">Données : <a href="https://musicbrainz.org" target="_blank" rel="noopener">MusicBrainz</a> (base ouverte, CC0) · Pochettes : <a href="https://coverartarchive.org" target="_blank" rel="noopener">Cover Art Archive</a> · <span class="mono">version 18/10 · 13h</span></footer>
 </div>
 
 <dialog id="sheet" aria-labelledby="sheetTitle">
@@ -962,6 +962,14 @@ function albumRows(list, S) {
   });
   return [...agg.values()].map(g => ({ ...g, avg: g.sum / g.n })).sort((a, b) => a.avg - b.avg);
 }
+/* each block renders on its own: one failure never hides the others */
+function safe(name, fn, host) {
+  try { fn(); }
+  catch (e) {
+    console.error("Discoduel · " + name, e);
+    if (host) host.replaceChildren(el("p", { class: "note", text: "Cette partie des stats n’a pas pu s’afficher." }));
+  }
+}
 function renderResult() {
   const t = state.t;
   if (!run(t.order, t.answers).ranking) { state.phase = "duel"; save(); render(); return; }
@@ -973,6 +981,7 @@ function renderResult() {
   $("sharePanel").hidden = true; $("copyBox").hidden = true; $("shareStatus").textContent = "";
 
   // podium
+  safe("podium", () => {
   const pod = $("podium"); pod.replaceChildren();
   list.slice(0, 3).forEach((it, i) => pod.append(el("div", { class: "pod" + (i === 0 ? " first" : "") },
     el("div", { class: "rank", text: String(i + 1) }), art(it),
@@ -980,8 +989,10 @@ function renderResult() {
       el("span", { class: "mono muted", text: [it.album, it.year].filter(Boolean).join(" · ") }),
       el("span", { class: "vline" }, el("b", { text: plural(W[it.id], "vote") }),
         L[it.id] ? ` · ${plural(L[it.id], "défaite")}` : " · invaincu")))));
+  }, $("podium"));
 
   // key figures
+  safe("chiffres", () => {
   const k = $("kpis"); k.replaceChildren();
   const kpi = (v, s) => el("div", { class: "kpi" }, el("b", { text: v }), el("span", { text: s }));
   k.append(kpi(String(t.answers.length), `duels joués, sur ${t.max} au maximum`), kpi(String(N), `titres classés, de ${plural(rows.length, "disque")}`));
@@ -992,8 +1003,10 @@ function renderResult() {
   }
   const unbeaten = list.filter(it => !L[it.id] && W[it.id]);
   k.append(kpi(String(unbeaten.length), unbeaten.length > 1 ? "titres invaincus" : "titre invaincu"));
+  }, $("kpis"));
 
   // full ranking with votes
+  safe("classement", () => {
   const ol = $("restList"); ol.replaceChildren();
   list.forEach((it, i) => {
     const w = W[it.id], l = L[it.id];
@@ -1006,8 +1019,10 @@ function renderResult() {
           el("i", { style: `width:${w + l ? 100 * w / (w + l) : 0}%` }), el("em", { style: `width:${w + l ? 100 * l / (w + l) : 0}%` })),
         el("span", { class: "mono muted", text: `${w}–${l}` }))));
   });
+  }, $("restList"));
 
   // records
+  safe("records", () => {
   const R = $("records"); R.replaceChildren();
   const byRank = (a, b) => S.rank.get(a.id) - S.rank.get(b.id);
   const most = [...list].sort((a, b) => W[b.id] - W[a.id] || byRank(a, b))[0];
@@ -1031,10 +1046,14 @@ function renderResult() {
       R.append(rec("Le choix éclair", t.items[fast.w], dec(fast.ms / 1000) + " s", `${name(fast.w)} contre ${name(fast.l)}`));
     }
   }
+  }, $("records"));
 
-  // albums
-  $("statsWrap").hidden = rows.length < 2;
+  // albums (shown even for a single album; the top-10 split only when there are several)
+  safe("albums", () => {
+  $("statsWrap").hidden = !rows.length;
+  $("albumsTitle").textContent = rows.length > 1 ? "Albums, du préféré au moins aimé" : "Ton album en chiffres";
   const topN = Math.min(10, N), t10 = $("top10"); t10.replaceChildren();
+  t10.hidden = rows.length < 2;
   const share = rows.filter(g => g.top10).sort((a, b) => b.top10 - a.top10);
   t10.append(el("p", { class: "eyebrow", text: `Qui occupe ton top ${topN}` }),
     el("div", { class: "stack", role: "img", "aria-label": share.map(g => `${g.name} : ${g.top10}`).join(", ") },
@@ -1051,6 +1070,7 @@ function renderResult() {
       el("div", {}, el("dt", { text: "Victoires" }), el("dd", { text: `${pct(g.w, g.l)} (${g.w}–${g.l})` })),
       el("div", {}, el("dt", { text: "Meilleur titre" }), el("dd", { text: `${g.best.it.title} (n°${g.best.rank})` })),
       el("div", {}, el("dt", { text: `Dans ton top ${topN}` }), el("dd", { text: `${g.top10} / ${g.n}` }))))));
+  }, $("albumStats"));
 
   $("copyBox").value = `Mon classement ${t.artist} (Discoduel)\n` + list.map((it, i) => `${i + 1}. ${it.title} (${it.album}) · ${plural(W[it.id], "vote")}`).join("\n");
 }
