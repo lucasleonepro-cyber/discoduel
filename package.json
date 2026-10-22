@@ -1,0 +1,9 @@
+{
+  "name": "discoduel",
+  "private": true,
+  "type": "module",
+  "description": "Discoduel : classe la discographie d'un artiste en duels.",
+  "dependencies": {
+    "@netlify/blobs": "11.1.3"
+  }
+}

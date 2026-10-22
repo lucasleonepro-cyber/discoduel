@@ -1,0 +1,7 @@
+# Discoduel — static page in /public, small serverless functions in /netlify/functions
+[build]
+  publish = "public"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

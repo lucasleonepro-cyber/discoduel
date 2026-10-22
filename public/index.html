@@ -229,6 +229,30 @@ ol.rest .al{font-size:13px;color:var(--muted);text-align:right;max-width:34vw;ov
 .copybox{min-height:110px;width:100%;font-family:var(--f-mono);font-size:13px}
 footer.credits{border-top:1px solid var(--line);padding-top:14px;font-size:13px;color:var(--muted)}
 
+/* daily challenge */
+.daily{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;background:var(--surface);border:2px solid var(--ink);border-radius:var(--r);padding:16px;box-shadow:6px 6px 0 var(--blue)}
+.daily .art{box-shadow:0 0 0 2px var(--ink)}
+.daily-body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.daily-body .eyebrow{color:var(--pink)}
+.daily-title{font-size:clamp(28px,5vw,40px)}
+.daily-artist{margin:0;font-family:var(--f-display);font-weight:800;font-size:22px;text-transform:uppercase;line-height:1}
+.daily-empty{border:2px dashed var(--line);border-radius:var(--r);padding:12px 16px}
+.daily-compare{display:flex;flex-direction:column;gap:12px;border:2px solid var(--ink);border-radius:var(--r);padding:16px;background:var(--surface);box-shadow:6px 6px 0 var(--blue)}
+.daily-compare h3{font-family:var(--f-display);font-weight:800;font-size:26px;text-transform:uppercase;line-height:1;margin:4px 0 0;overflow-wrap:anywhere}
+.daily-compare .eyebrow{color:var(--pink)}
+.dc-score{display:flex;flex-direction:column;align-items:flex-end;text-align:right;max-width:220px}
+.dc-score b{font-family:var(--f-display);font-weight:900;font-size:48px;line-height:.9;color:var(--blue)}
+.dc-score span{font-size:13px;color:var(--muted)}
+.dc-list{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.dc-list li{display:grid;grid-template-columns:2.2em 1fr auto auto;gap:10px;align-items:center;padding:7px 2px;border-bottom:1px solid var(--line)}
+.dc-list .n{font-family:var(--f-mono);color:var(--muted);text-align:right}
+.dc-list .tt{font-weight:600;min-width:0;overflow-wrap:anywhere}
+.dc-list .tt small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+.dc-you{font-family:var(--f-mono);font-size:12.5px;white-space:nowrap}
+.dc-you.up{color:var(--green)} .dc-you.down{color:var(--pink)}
+.dc-avg{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.dc-head{display:grid;grid-template-columns:2.2em 1fr auto auto;gap:10px;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
 /* ---------- touch screens ---------- */
 button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 @media (hover:none){
@@ -256,6 +280,14 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
   #artistInput{font-size:20px}
   .cand{padding:12px}
   .cand b{font-size:21px}
+
+  .daily{grid-template-columns:96px 1fr;gap:12px;padding:12px;box-shadow:4px 4px 0 var(--blue)}
+  .daily .row .btn{flex:1 1 100%}
+  .daily-artist{font-size:18px}
+  .dc-score{align-items:flex-start;text-align:left;max-width:none}
+  .dc-list li,.dc-head{grid-template-columns:1.8em 1fr auto;gap:8px}
+  .dc-avg{display:none}
+  .dc-head span:last-child{display:none}
 
   /* albums */
   .linkbtn{padding:6px 0}
@@ -321,6 +353,20 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
 
   <!-- HOME -->
   <section id="home">
+    <div class="daily" id="dailyBox" hidden>
+      <div id="dailyArt"></div>
+      <div class="daily-body">
+        <p class="eyebrow" id="dailyDate">Défi du jour</p>
+        <h2 class="daily-title" id="dailyTitle"></h2>
+        <p class="daily-artist" id="dailyArtist"></p>
+        <p class="note" id="dailyWhy"></p>
+        <div class="row">
+          <button class="btn primary" id="dailyBtn" type="button">Jouer le défi →</button>
+          <span class="note" id="dailyPlayers"></span>
+        </div>
+      </div>
+    </div>
+    <p class="note daily-empty" id="dailyEmpty" hidden></p>
     <div class="searchbox">
       <form class="search" id="searchForm" autocomplete="off">
         <div class="field">
@@ -426,6 +472,15 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
         <textarea id="copyBox" class="copybox" readonly hidden aria-label="Classement en texte"></textarea>
       </div>
     </div>
+    <div class="daily-compare" id="dailyCompare" hidden>
+      <div class="top-row">
+        <div style="min-width:0"><p class="eyebrow">Défi du jour · toi contre les autres joueurs</p><h3 id="dcTitle"></h3></div>
+        <div class="dc-score"><b id="dcScore"></b><span id="dcScoreLbl"></span></div>
+      </div>
+      <p class="status" id="dcStatus"></p>
+      <div class="dc-head" id="dcHead" hidden><span>#</span><span>Classement des joueurs</span><span>Toi</span><span>Rang moyen</span></div>
+      <ol class="dc-list" id="dcList"></ol>
+    </div>
     <div class="podium" id="podium"></div>
     <div class="kpis" id="kpis"></div>
     <div class="split">
@@ -453,7 +508,7 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
     </div>
   </section>
 
-  <footer class="credits">Données : <a href="https://musicbrainz.org" target="_blank" rel="noopener">MusicBrainz</a> (base ouverte, CC0) · Pochettes : <a href="https://coverartarchive.org" target="_blank" rel="noopener">Cover Art Archive</a> · <span class="mono">version 22/10</span></footer>
+  <footer class="credits">Données : <a href="https://musicbrainz.org" target="_blank" rel="noopener">MusicBrainz</a> (base ouverte, CC0) · Pochettes : <a href="https://coverartarchive.org" target="_blank" rel="noopener">Cover Art Archive</a> · <span class="mono">version 22/10 · défi</span><br>Pour choisir le défi du jour, le site compte anonymement les artistes et albums lancés en tournoi. Aucune donnée personnelle n’est enregistrée.</footer>
 </div>
 
 <dialog id="sheet" aria-labelledby="sheetTitle">
@@ -709,7 +764,109 @@ async function openArtist(a) {
   } catch (e) { if (e?.name !== "AbortError") setStatus(st, mbErr(e), "err"); }
 }
 
+/* ---------- daily challenge (Netlify functions under /api) ---------- */
+const API = "/api";
+const apiOk = /^https?:$/.test(location.protocol);
+const DONE_KEY = "discoduel.daily.done";
+let dailyData = null, dailyLoading = null;
+const submitting = new Set();
+function dailyDone() { try { return JSON.parse(localStorage.getItem(DONE_KEY)) || {}; } catch (e) { return {}; } }
+function markDone(date, order) {
+  const d = dailyDone(); d[date] = order;
+  const keys = Object.keys(d).sort(); while (keys.length > 14) delete d[keys.shift()];
+  try { localStorage.setItem(DONE_KEY, JSON.stringify(d)); } catch (e) {}
+}
+async function api(path, body) {
+  const r = await fetch(API + path, body
+    ? { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), keepalive: true }
+    : { cache: "no-store" });
+  if (!r.ok) throw Object.assign(new Error("api " + r.status), { status: r.status });
+  return r.json();
+}
+function loadDaily(force) {
+  if (!apiOk) return Promise.resolve(null);
+  if (!dailyLoading || force) dailyLoading = api("/daily").then(d => (dailyData = d && d.date ? d : null)).catch(() => null);
+  return dailyLoading;
+}
+const frDate = iso => new Date(iso + "T12:00:00").toLocaleDateString("fr-BE", { weekday: "long", day: "numeric", month: "long" });
+function renderDaily() {
+  const box = $("dailyBox"), empty = $("dailyEmpty"), d = dailyData;
+  if (!d) { box.hidden = true; empty.hidden = true; return; }
+  if (!d.challenge) {
+    box.hidden = true; empty.hidden = false;
+    empty.textContent = "Défi du jour : il apparaîtra dès que des joueurs auront lancé leurs premiers tournois. Lance le tien !";
+    return;
+  }
+  const c = d.challenge; empty.hidden = true; box.hidden = false;
+  $("dailyArt").replaceChildren(art({ rg: c.album.id, album: c.album.title, ai: 1 }, 500));
+  $("dailyDate").textContent = "Défi du jour · " + frDate(d.date);
+  $("dailyTitle").textContent = c.album.title;
+  $("dailyArtist").textContent = [c.artist.name, c.album.year].filter(Boolean).join(" · ");
+  $("dailyWhy").textContent = `Tiré au sort parmi les albums choisis par les joueurs : ${c.artist.name} a été lancé dans ${plural(c.artist.plays, "tournoi")}, cet album choisi ${c.album.picks} fois.`;
+  const players = d.community?.players || 0;
+  $("dailyPlayers").textContent = players ? `${plural(players, "joueur")} l’${players > 1 ? "ont" : "a"} déjà fait` : "Sois le premier à le faire aujourd’hui";
+  const done = dailyDone()[d.date];
+  const mine = state.t?.daily?.date === d.date && run(state.t.order, state.t.answers).ranking;
+  $("dailyBtn").textContent = done && mine ? "Voir mon résultat" : done ? "Rejouer le défi (déjà compté)" : `Jouer le défi · ${c.tracks.length} titres →`;
+}
+function startDaily(d) {
+  const c = d.challenge;
+  const items = c.tracks.map((title, i) => ({ id: i, title, album: c.album.title, year: c.album.year, ai: 1, rg: c.album.id }));
+  state.t = { artist: c.artist.name, items, order: shuffle(items.map(x => x.id)), answers: [], times: [], max: maxDuels(items.length), daily: { date: d.date, album: c.album.title } };
+  state.phase = "duel"; save(); render(); window.scrollTo({ top: 0, behavior: "smooth" });
+}
+$("dailyBtn").addEventListener("click", () => {
+  const d = dailyData; if (!d?.challenge) return;
+  if (dailyDone()[d.date] && state.t?.daily?.date === d.date && run(state.t.order, state.t.answers).ranking) { state.phase = "result"; save(); render(); return; }
+  startDaily(d);
+});
+function reportPlay() {
+  if (!apiOk || !state.artist?.id) return;
+  const albums = state.albums.filter(a => a.on && a.tracks && a.tracks.length).map(a => ({ id: a.id, title: a.title, year: a.year }));
+  if (!albums.length) return;
+  api("/play", { artist: { id: state.artist.id, name: state.artist.name }, albums })
+    .then(() => { if (dailyData && !dailyData.challenge) loadDaily(true); }).catch(() => {});
+}
+function renderDailyCompare(t, list) {
+  const box = $("dailyCompare");
+  if (!t.daily) { box.hidden = true; return; }
+  box.hidden = false;
+  $("dcTitle").textContent = `${t.daily.album} · ${frDate(t.daily.date)}`;
+  $("dcScore").textContent = ""; $("dcScoreLbl").textContent = ""; $("dcList").replaceChildren(); $("dcHead").hidden = true;
+  const st = $("dcStatus"), order = list.map(it => it.id), date = t.daily.date;
+  if (!apiOk) { setStatus(st, "La comparaison avec les autres joueurs n’existe que sur le site en ligne."); return; }
+  const show = c => {
+    const you = new Map(order.map((id, i) => [id, i + 1])), n = c.ranking.length;
+    let diff = 0; c.ranking.forEach((x, k) => { diff += Math.abs((you.get(x.i) ?? n) - (k + 1)); });
+    const agree = Math.max(0, Math.round(100 * (1 - diff / (Math.floor(n * n / 2) || 1))));
+    $("dcScore").textContent = c.players > 1 ? agree + " %" : "1er";
+    $("dcScoreLbl").textContent = c.players > 1 ? `d’accord avec le classement des ${c.players} joueurs (toi compris)` : "Tu es le premier à finir ce défi aujourd’hui : reviens plus tard pour comparer.";
+    $("dcHead").hidden = false;
+    const ol = $("dcList"); ol.replaceChildren();
+    c.ranking.forEach((x, k) => {
+      const r = you.get(x.i), delta = r - (k + 1);
+      ol.append(el("li", {}, el("span", { class: "n", text: String(k + 1) }),
+        el("span", { class: "tt" }, x.title, x.firsts ? el("small", { text: `n°1 pour ${plural(x.firsts, "joueur")}` }) : null),
+        el("span", { class: "dc-you" + (delta < 0 ? " up" : delta > 0 ? " down" : ""), text: `n°${r}` + (delta < 0 ? " ▲" : delta > 0 ? " ▼" : " =") }),
+        el("span", { class: "dc-avg", text: "moy. " + dec(x.avg) })));
+    });
+  };
+  const done = dailyDone()[date];
+  if (!done && submitting.has(date)) return;
+  setStatus(st, done ? "Chargement du classement des joueurs…" : "Envoi de ton classement…", "busy");
+  const p = done
+    ? api("/daily").then(d => (d.date === date ? d.community : null))
+    : (submitting.add(date), api("/daily-result", { date, order }).then(r => { markDone(date, order); return r.community; }).finally(() => submitting.delete(date)));
+  p.then(c => {
+    if (!c) { setStatus(st, "Ce défi est terminé : les résultats de ce jour-là ne sont plus affichés."); return; }
+    setStatus(st, done ? "Ton résultat avait déjà été compté." : "Ton classement a été ajouté à celui des joueurs ✓");
+    show(c); loadDaily(true);
+  }).catch(e => setStatus(st, e?.status === 400 || e?.status === 404 ? "Ce défi n’est plus ouvert : ton classement n’a pas été compté." : "Impossible de joindre le serveur. Ton classement n’est pas encore envoyé : reviens sur cette page plus tard.", "err"));
+}
+
 function renderHome() {
+  renderDaily();
+  loadDaily().then(renderDaily);
   const t = state.t, box = $("resumeBox");
   if (t && t.items) {
     const r = run(t.order, t.answers);
@@ -818,7 +975,7 @@ $("startBtn").addEventListener("click", () => {
   const act = $("startBtn").dataset.act;
   if (act === "stop") tctl?.abort();
   else if (act === "fetch") fetchTracks();
-  else start(buildPool());
+  else start(buildPool(), true);
 });
 $("modeAll").addEventListener("click", () => { state.mode = "all"; state.albums.forEach(a => a.on = a.main); save(); renderAlbums(); });
 $("modePick").addEventListener("click", () => { if (state.mode !== "pick") { state.mode = "pick"; state.albums.forEach(a => a.on = false); } save(); renderAlbums(); });
@@ -863,8 +1020,9 @@ $("sheet").addEventListener("click", e => { if (e.target === $("sheet")) closeSh
 
 /* ---------- DUEL ---------- */
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function start(pool) {
+function start(pool, report) {
   state.t = { artist: state.artist.name, items: pool, order: shuffle(pool.map(p => p.id)), answers: [], times: [], max: maxDuels(pool.length) };
+  if (report) reportPlay();
   state.phase = "duel"; save(); render(); window.scrollTo({ top: 0, behavior: "smooth" });
 }
 let busy = false;
@@ -982,7 +1140,7 @@ function renderResult() {
   const list = S.ranking.map(id => t.items[id]), N = list.length;
   const rows = albumRows(list, S);
   $("resMeta").textContent = `${N} titres · ${t.answers.length} duels joués`;
-  $("resTitle").textContent = `Ton classement ${t.artist}`;
+  $("resTitle").textContent = t.daily ? `Défi du jour\u00a0: ${t.daily.album}` : `Ton classement ${t.artist}`;
   $("sharePanel").hidden = true; $("copyBox").hidden = true; $("shareStatus").textContent = "";
 
   // podium
@@ -1077,7 +1235,9 @@ function renderResult() {
       el("div", {}, el("dt", { text: `Dans ton top ${topN}` }), el("dd", { text: `${g.top10} / ${g.n}` }))))));
   }, $("albumStats"));
 
-  $("copyBox").value = `Mon classement ${t.artist} (Discoduel)\n` + list.map((it, i) => `${i + 1}. ${it.title} (${it.album}) · ${plural(W[it.id], "vote")}`).join("\n");
+  safe("défi du jour", () => renderDailyCompare(t, list), $("dcList"));
+
+  $("copyBox").value = (t.daily ? `Défi du jour Discoduel · ${t.daily.album} (${t.artist})\n` : `Mon classement ${t.artist} (Discoduel)\n`) + list.map((it, i) => `${i + 1}. ${it.title} (${it.album}) · ${plural(W[it.id], "vote")}`).join("\n");
 }
 
 /* poster image */
@@ -1124,7 +1284,7 @@ async function makePoster() {
   x.fillStyle = "#F1F2F5"; x.fillRect(0, 0, W, H);
   x.fillStyle = "rgba(255,62,165,.18)";
   for (let yy = 0; yy < 260; yy += 14) for (let xx = W - 260; xx < W; xx += 14) { const r = Math.max(0, 4 - Math.hypot(W - xx, yy) / 70); if (r > .3) { x.beginPath(); x.arc(xx, yy, r, 0, 7); x.fill(); } }
-  x.fillStyle = "#62617A"; x.font = `500 22px ${M}`; x.fillText("MON CLASSEMENT · DISCODUEL", P, P + 18);
+  x.fillStyle = "#62617A"; x.font = `500 22px ${M}`; x.fillText(fit(x, t.daily ? "DÉFI DU JOUR · " + t.daily.album.toUpperCase() + " · DISCODUEL" : "MON CLASSEMENT · DISCODUEL", W - 2 * P), P, P + 18);
   let fs = 150; x.font = `900 ${fs}px ${D}`;
   const name = artist.toUpperCase();
   while (fs > 56 && x.measureText(name).width > W - 2 * P) { fs -= 4; x.font = `900 ${fs}px ${D}`; }
@@ -1196,7 +1356,11 @@ $("copyTxtBtn").addEventListener("click", async () => {
   try { await navigator.clipboard.writeText(box.value); setStatus(st, "Texte copié ✓"); }
   catch (e) { box.hidden = false; box.focus(); box.select(); setStatus(st, "Texte sélectionné : copie-le avec Ctrl+C / ⌘C."); }
 });
-$("againBtn").addEventListener("click", () => start(state.t.items));
+$("againBtn").addEventListener("click", () => {
+  const t = state.t;
+  state.t = { ...t, order: shuffle(t.items.map(p => p.id)), answers: [], times: [] };
+  state.phase = "duel"; save(); render(); window.scrollTo({ top: 0, behavior: "smooth" });
+});
 $("newBtn").addEventListener("click", () => { state.phase = "home"; state.t = null; save(); render(); window.scrollTo({ top: 0 }); $("artistInput").focus(); });
 
 /* ---------- router ---------- */
