@@ -509,7 +509,7 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
     </div>
   </section>
 
-  <footer class="credits">Données : <a href="https://musicbrainz.org" target="_blank" rel="noopener">MusicBrainz</a> (base ouverte, CC0) · Pochettes : <a href="https://coverartarchive.org" target="_blank" rel="noopener">Cover Art Archive</a> · <span class="mono">version 23/10</span><br>Pour choisir le défi du jour, le site compte anonymement les artistes et albums lancés en tournoi. Aucune donnée personnelle n’est enregistrée.</footer>
+  <footer class="credits">Données : <a href="https://musicbrainz.org" target="_blank" rel="noopener">MusicBrainz</a> (base ouverte, CC0) · Pochettes : <a href="https://coverartarchive.org" target="_blank" rel="noopener">Cover Art Archive</a> · <span class="mono">version 23/10 · b</span><br>Pour choisir le défi du jour, le site compte anonymement les artistes et albums lancés en tournoi. Aucune donnée personnelle n’est enregistrée.</footer>
 </div>
 
 <dialog id="sheet" aria-labelledby="sheetTitle">
@@ -629,7 +629,7 @@ const isVideo = m => /dvd|blu-ray|vhs|video|umd/i.test(m?.format || "");
 const audioCount = r => (r.media || []).filter(m => !isVideo(m)).reduce((s, m) => s + (m["track-count"] || 0), 0);
 /* Which edition gives the track titles: the original one, as first published.
    Translated or transliterated editions ("Pseudo-Release") and editions printed in another
-   language are set aside; the artist's home-country edition is preferred; then the standard
+   language or another writing system (e.g. a Japanese edition of an English album) are set aside; the artist's home-country edition is preferred; then the standard
    edition (most common track count, smaller wins ties) and the earliest date. */
 function pickRelease(all, country) {
   let rels = (all || []).filter(r => audioCount(r) > 0 && r.status !== "Pseudo-Release");
@@ -643,6 +643,14 @@ function pickRelease(all, country) {
     const main = [...langs.entries()].sort((a, b) => b[1] - a[1])[0][0];
     const same = rels.filter(r => !lang(r) || lang(r) === main || lang(r) === "mul");
     if (same.length) rels = same;
+  }
+  const script = r => r["text-representation"]?.script || "";
+  const scripts = new Map();
+  for (const r of rels) { const sc = script(r); if (sc && sc !== "Zyyy" && sc !== "Qaaa") scripts.set(sc, (scripts.get(sc) || 0) + 1); }
+  if (scripts.size > 1) {
+    const mainScript = [...scripts.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    const sameScript = rels.filter(r => !script(r) || script(r) === mainScript);
+    if (sameScript.length) rels = sameScript;
   }
   if (country) {
     const home = rels.filter(r => r.country === country || (r["release-events"] || []).some(e => (e.area?.["iso-3166-1-codes"] || []).includes(country)));
@@ -661,7 +669,7 @@ async function tracksOf(rgId, signal, country) {
   const out = [];
   for (const m of rel.media || []) {
     if (isVideo(m)) continue;
-    for (const t of m.tracks || []) { const title = String(t.title || t.recording?.title || "").trim(); if (title) out.push(title); }
+    for (const t of m.tracks || []) { const title = String(t.recording?.title || t.title || "").trim(); if (title) out.push(title); }
   }
   return out;
 }
@@ -671,6 +679,8 @@ let state;
 try { state = JSON.parse(localStorage.getItem(KEY)); } catch (e) { state = null; }
 if (!state || !state.phase) state = { phase: "home", artist: null, albums: [], mode: "all", t: null };
 if (state.phase === "albums" && !state.artist) state.phase = "home";
+const TRACKS_V = 2;
+for (const a of state.albums || []) if (a.tracks && a.tv !== TRACKS_V && !a.manual) { a.tracks = null; a.missing = false; }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
 
 /* ---------- artwork ---------- */
@@ -983,7 +993,7 @@ async function fetchTracks() {
       launchMsg = `${done + 1} / ${todo.length} : ${a.title}`; renderLaunch();
       try {
         const tr = await tracksOf(a.id, tctl.signal, state.artist?.country);
-        a.tracks = tr.map(t => ({ t, on: true })); a.missing = !tr.length;
+        a.tracks = tr.map(t => ({ t, on: true })); a.missing = !tr.length; a.tv = TRACKS_V;
       } catch (e) { if (e?.name === "AbortError") throw e; failed++; }
       done++; save(); renderAlbums();
     }
@@ -1030,7 +1040,7 @@ $("addTrackForm").addEventListener("submit", e => {
   if (!v || sheetAi == null) return;
   const a = state.albums[sheetAi];
   if (!a.tracks) a.tracks = [];
-  a.tracks.push({ t: v, on: true }); a.missing = false;
+  a.tracks.push({ t: v, on: true }); a.missing = false; a.manual = true;
   $("addTrackInput").value = "";
   save(); renderSheet(); renderAlbums();
 });

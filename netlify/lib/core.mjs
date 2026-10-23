@@ -101,7 +101,7 @@ const isVideo = m => /dvd|blu-ray|vhs|video|umd/i.test(m?.format || "");
 const audioCount = r => (r.media || []).filter(m => !isVideo(m)).reduce((s, m) => s + (m["track-count"] || 0), 0);
 /* Which edition gives the track titles: the original one, as first published.
    Translated or transliterated editions ("Pseudo-Release") and editions printed in another
-   language are set aside; the artist's home-country edition is preferred; then the standard
+   language or another writing system (e.g. a Japanese edition of an English album) are set aside; the artist's home-country edition is preferred; then the standard
    edition (most common track count, smaller wins ties) and the earliest date. */
 export function pickRelease(all, country) {
   let rels = (all || []).filter(r => audioCount(r) > 0 && r.status !== "Pseudo-Release");
@@ -115,6 +115,14 @@ export function pickRelease(all, country) {
     const main = [...langs.entries()].sort((a, b) => b[1] - a[1])[0][0];
     const same = rels.filter(r => !lang(r) || lang(r) === main || lang(r) === "mul");
     if (same.length) rels = same;
+  }
+  const script = r => r["text-representation"]?.script || "";
+  const scripts = new Map();
+  for (const r of rels) { const sc = script(r); if (sc && sc !== "Zyyy" && sc !== "Qaaa") scripts.set(sc, (scripts.get(sc) || 0) + 1); }
+  if (scripts.size > 1) {
+    const mainScript = [...scripts.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    const sameScript = rels.filter(r => !script(r) || script(r) === mainScript);
+    if (sameScript.length) rels = sameScript;
   }
   if (country) {
     const home = rels.filter(r => r.country === country || (r["release-events"] || []).some(e => (e.area?.["iso-3166-1-codes"] || []).includes(country)));
@@ -134,7 +142,7 @@ export async function fetchTracks(rgId, get = mbGet, country = "") {
   for (const m of rel.media || []) {
     if (isVideo(m)) continue;
     for (const t of m.tracks || []) {
-      const title = clip(t.title || t.recording?.title, 200), k = trackKey(title) || title;
+      const title = clip(t.recording?.title || t.title, 200), k = trackKey(title) || title;
       if (title && !seen.has(k)) { seen.add(k); out.push(title); }
     }
   }
