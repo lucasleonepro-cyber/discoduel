@@ -99,16 +99,36 @@ export const trackKey = s => String(s).toLowerCase()
   .normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\p{L}\p{N}]/gu, "");
 const isVideo = m => /dvd|blu-ray|vhs|video|umd/i.test(m?.format || "");
 const audioCount = r => (r.media || []).filter(m => !isVideo(m)).reduce((s, m) => s + (m["track-count"] || 0), 0);
-export async function fetchTracks(rgId, get = mbGet) {
-  const d = await get(`release?release-group=${rgId}&inc=media&limit=100`);
-  let rels = (d.releases || []).filter(r => audioCount(r) > 0);
+/* Which edition gives the track titles: the original one, as first published.
+   Translated or transliterated editions ("Pseudo-Release") and editions printed in another
+   language are set aside; the artist's home-country edition is preferred; then the standard
+   edition (most common track count, smaller wins ties) and the earliest date. */
+export function pickRelease(all, country) {
+  let rels = (all || []).filter(r => audioCount(r) > 0 && r.status !== "Pseudo-Release");
   const official = rels.filter(r => r.status === "Official");
   if (official.length) rels = official;
-  if (!rels.length) return [];
+  if (!rels.length) return null;
+  const lang = r => r["text-representation"]?.language || "";
+  const langs = new Map();
+  for (const r of rels) { const l = lang(r); if (l && l !== "mul" && l !== "zxx") langs.set(l, (langs.get(l) || 0) + 1); }
+  if (langs.size) {
+    const main = [...langs.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    const same = rels.filter(r => !lang(r) || lang(r) === main || lang(r) === "mul");
+    if (same.length) rels = same;
+  }
+  if (country) {
+    const home = rels.filter(r => r.country === country || (r["release-events"] || []).some(e => (e.area?.["iso-3166-1-codes"] || []).includes(country)));
+    if (home.length) rels = home;
+  }
   const freq = new Map();
   for (const r of rels) { const c = audioCount(r); freq.set(c, (freq.get(c) || 0) + 1); }
   const target = [...freq.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0][0];
-  const pick = rels.filter(r => audioCount(r) === target).sort((a, b) => (a.date || "9999").localeCompare(b.date || "9999"))[0];
+  return rels.filter(r => audioCount(r) === target).sort((a, b) => (a.date || "9999").localeCompare(b.date || "9999"))[0];
+}
+export async function fetchTracks(rgId, get = mbGet, country = "") {
+  const d = await get(`release?release-group=${rgId}&inc=media&limit=100`);
+  const pick = pickRelease(d.releases, country);
+  if (!pick) return [];
   const rel = await get(`release/${pick.id}?inc=recordings`);
   const out = [], seen = new Set();
   for (const m of rel.media || []) {

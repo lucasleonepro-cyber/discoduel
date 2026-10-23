@@ -53,6 +53,7 @@ body.home-mode .wordmark{font-size:clamp(64px,17vw,150px)}
 .btn.ghost:hover{box-shadow:none;transform:none;color:var(--pink)}
 .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
 h2{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,6vw,44px);line-height:.95;margin:0;text-transform:uppercase;text-wrap:balance}
+.as-written{text-transform:none!important}
 .note{font-size:14px;color:var(--muted);margin:0}
 .status{font-size:14.5px;margin:0}
 .status:empty{display:none}
@@ -73,7 +74,7 @@ h2{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,6vw,44px);l
 .candidates{display:flex;flex-direction:column;gap:8px}
 .cand{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;text-align:left;background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r);padding:10px 14px;cursor:pointer}
 .cand:hover{border-color:var(--ink);box-shadow:3px 3px 0 var(--pink)}
-.cand b{font-family:var(--f-display);font-weight:800;font-size:24px;text-transform:uppercase;line-height:1}
+.cand b{font-family:var(--f-display);font-weight:800;font-size:24px;line-height:1}
 .cand span{font-size:14px;color:var(--muted)}
 .resume{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border:2px dashed var(--ink);border-radius:var(--r);padding:12px 16px}
 .rules{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;list-style:none;margin:0;padding:0;counter-reset:r}
@@ -106,7 +107,7 @@ details.others[open] summary{margin-bottom:12px}
 .acard.off .at{color:var(--muted);text-decoration:line-through}
 .acard .tick{position:absolute;top:8px;right:8px;z-index:6;width:28px;height:28px;border-radius:50%;background:var(--pink);color:#1D1B3A;border:2px solid var(--ink);display:grid;place-items:center;font-weight:800;font-size:15px}
 .acard.off .tick{background:var(--surface);color:transparent}
-.at{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1;text-transform:uppercase;overflow-wrap:anywhere}
+.at{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1;overflow-wrap:anywhere}
 .acard-actions{display:flex;gap:4px 12px;flex-wrap:wrap}
 .kind{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:1px 6px;border-radius:99px;border:1.2px solid currentColor;color:var(--blue)}
 .empty{padding:20px;border:2px dashed var(--line);border-radius:var(--r);text-align:center}
@@ -121,7 +122,7 @@ dialog{border:2px solid var(--ink);border-radius:var(--r);background:var(--surfa
 dialog::backdrop{background:rgba(19,18,42,.55)}
 .sheet{display:flex;flex-direction:column;gap:18px;padding:18px}
 .sheet-head{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:end}
-.sheet h3{font-family:var(--f-display);font-weight:800;font-size:32px;line-height:.95;text-transform:uppercase;margin:0;overflow-wrap:anywhere}
+.sheet h3{font-family:var(--f-display);font-weight:800;font-size:32px;line-height:.95;margin:0;overflow-wrap:anywhere}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{border:1.5px solid var(--ink);background:transparent;border-radius:99px;padding:3px 10px;font-size:13.5px;cursor:pointer;line-height:1.4}
 .chip[aria-pressed="false"]{border-color:var(--line);color:var(--muted);text-decoration:line-through}
@@ -153,7 +154,7 @@ dialog::backdrop{background:rgba(19,18,42,.55)}
 .card:active{transform:none;box-shadow:none}
 .card.picked{box-shadow:6px 6px 0 var(--blue);transform:translate(-3px,-3px) rotate(-1deg)}
 .card .art{font-size:clamp(26px,5vw,40px)}
-.card .t{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4.6vw,40px);line-height:.95;text-transform:uppercase;margin:0;overflow-wrap:anywhere;text-wrap:balance}
+.card .t{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4.6vw,40px);line-height:.95;margin:0;overflow-wrap:anywhere;text-wrap:balance}
 .card .meta{display:flex;justify-content:space-between;gap:8px;color:var(--muted)}
 .key{display:inline-block;border:1.5px solid var(--line);border-radius:4px;padding:0 6px;font-family:var(--f-mono);font-size:11.5px}
 .duel-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
@@ -164,7 +165,7 @@ dialog::backdrop{background:rgba(19,18,42,.55)}
 .pod{background:var(--surface);border:2px solid var(--ink);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .pod.first{box-shadow:6px 6px 0 var(--pink)}
 .pod .rank{font-family:var(--f-display);font-weight:900;font-size:54px;line-height:.8;color:var(--pink);text-shadow:2px 2px 0 var(--blue)}
-.pod .t{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:.95;text-transform:uppercase;margin:0;overflow-wrap:anywhere}
+.pod .t{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:.95;margin:0;overflow-wrap:anywhere}
 .pod .art{font-size:24px}
 @media (max-width:620px){.podium{grid-template-columns:1fr}.pod{display:grid;grid-template-columns:auto 72px 1fr;align-items:center}.pod .art{font-size:16px}}
 ol.rest{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:2px solid var(--ink)}
@@ -191,7 +192,7 @@ ol.rest .votes b small{font-family:var(--f-mono);font-weight:400;font-size:11px;
 .rec{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:var(--surface);border:1.5px solid var(--line);border-radius:var(--r);padding:10px 12px;min-width:0}
 .rec .art{width:44px;font-size:12px;box-shadow:none}
 .rec .lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pink)}
-.rec .val{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1;text-transform:uppercase;overflow-wrap:anywhere}
+.rec .val{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1;overflow-wrap:anywhere}
 .rec .det{font-size:13px;color:var(--muted)}
 .rec.duo{grid-template-columns:1fr}
 .albums-block{display:flex;flex-direction:column;gap:16px;border-top:3px solid var(--ink);padding-top:16px}
@@ -205,7 +206,7 @@ ol.rest .votes b small{font-family:var(--f-mono);font-weight:400;font-size:11px;
 .alb{display:grid;grid-template-columns:72px 1fr;gap:12px;background:var(--surface);border:1.5px solid var(--line);border-radius:var(--r);padding:12px;min-width:0}
 .alb .art{width:72px;font-size:16px;box-shadow:none}
 .alb .rk{font-family:var(--f-display);font-weight:900;font-size:30px;line-height:.85;color:var(--pink)}
-.alb h4{font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1;text-transform:uppercase;margin:0;overflow-wrap:anywhere}
+.alb h4{font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1;margin:0;overflow-wrap:anywhere}
 .alb dl{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin:0}
 .alb dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .alb dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
@@ -235,10 +236,10 @@ footer.credits{border-top:1px solid var(--line);padding-top:14px;font-size:13px;
 .daily-body{display:flex;flex-direction:column;gap:6px;min-width:0}
 .daily-body .eyebrow{color:var(--pink)}
 .daily-title{font-size:clamp(28px,5vw,40px)}
-.daily-artist{margin:0;font-family:var(--f-display);font-weight:800;font-size:22px;text-transform:uppercase;line-height:1}
+.daily-artist{margin:0;font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1}
 .daily-empty{border:2px dashed var(--line);border-radius:var(--r);padding:12px 16px}
 .daily-compare{display:flex;flex-direction:column;gap:12px;border:2px solid var(--ink);border-radius:var(--r);padding:16px;background:var(--surface);box-shadow:6px 6px 0 var(--blue)}
-.daily-compare h3{font-family:var(--f-display);font-weight:800;font-size:26px;text-transform:uppercase;line-height:1;margin:4px 0 0;overflow-wrap:anywhere}
+.daily-compare h3{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1;margin:4px 0 0;overflow-wrap:anywhere}
 .daily-compare .eyebrow{color:var(--pink)}
 .dc-score{display:flex;flex-direction:column;align-items:flex-end;text-align:right;max-width:220px}
 .dc-score b{font-family:var(--f-display);font-weight:900;font-size:48px;line-height:.9;color:var(--blue)}
@@ -357,7 +358,7 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
       <div id="dailyArt"></div>
       <div class="daily-body">
         <p class="eyebrow" id="dailyDate">Défi du jour</p>
-        <h2 class="daily-title" id="dailyTitle"></h2>
+        <h2 class="daily-title as-written" id="dailyTitle"></h2>
         <p class="daily-artist" id="dailyArtist"></p>
         <p class="note" id="dailyWhy"></p>
         <div class="row">
@@ -401,7 +402,7 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
     <div class="top-row">
       <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
         <p class="eyebrow"><button class="linkbtn" id="backHome" type="button">← Nouvelle recherche</button></p>
-        <h2 id="discoArtist"></h2>
+        <h2 id="discoArtist" class="as-written"></h2>
         <span class="note" id="discoMeta"></span>
       </div>
     </div>
@@ -433,7 +434,7 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
   <section id="duel" hidden>
     <div class="duel-top">
       <div style="display:flex;flex-direction:column;gap:4px">
-        <p class="eyebrow" id="duelArtist"></p>
+        <p class="eyebrow as-written" id="duelArtist"></p>
         <h2 id="duelTitle">Duel 1</h2>
       </div>
       <span class="mono muted" id="duelMax"></span>
@@ -456,7 +457,7 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
     <div class="top-row">
       <div style="display:flex;flex-direction:column;gap:6px">
         <p class="eyebrow" id="resMeta"></p>
-        <h2 id="resTitle"></h2>
+        <h2 id="resTitle" class="as-written"></h2>
       </div>
       <button class="btn share-cta" id="shareBtn" type="button">Partager ↗</button>
     </div>
@@ -508,7 +509,7 @@ button,.card,.acard-main,.cand,a.btn{touch-action:manipulation;-webkit-tap-highl
     </div>
   </section>
 
-  <footer class="credits">Données : <a href="https://musicbrainz.org" target="_blank" rel="noopener">MusicBrainz</a> (base ouverte, CC0) · Pochettes : <a href="https://coverartarchive.org" target="_blank" rel="noopener">Cover Art Archive</a> · <span class="mono">version 22/10 · défi</span><br>Pour choisir le défi du jour, le site compte anonymement les artistes et albums lancés en tournoi. Aucune donnée personnelle n’est enregistrée.</footer>
+  <footer class="credits">Données : <a href="https://musicbrainz.org" target="_blank" rel="noopener">MusicBrainz</a> (base ouverte, CC0) · Pochettes : <a href="https://coverartarchive.org" target="_blank" rel="noopener">Cover Art Archive</a> · <span class="mono">version 23/10</span><br>Pour choisir le défi du jour, le site compte anonymement les artistes et albums lancés en tournoi. Aucune donnée personnelle n’est enregistrée.</footer>
 </div>
 
 <dialog id="sheet" aria-labelledby="sheetTitle">
@@ -626,17 +627,36 @@ async function releaseGroups(artistId, signal, onPage) {
 }
 const isVideo = m => /dvd|blu-ray|vhs|video|umd/i.test(m?.format || "");
 const audioCount = r => (r.media || []).filter(m => !isVideo(m)).reduce((s, m) => s + (m["track-count"] || 0), 0);
-async function tracksOf(rgId, signal) {
-  const d = await mb(`release?release-group=${rgId}&inc=media&limit=100`, signal);
-  let rels = (d.releases || []).filter(r => audioCount(r) > 0);
+/* Which edition gives the track titles: the original one, as first published.
+   Translated or transliterated editions ("Pseudo-Release") and editions printed in another
+   language are set aside; the artist's home-country edition is preferred; then the standard
+   edition (most common track count, smaller wins ties) and the earliest date. */
+function pickRelease(all, country) {
+  let rels = (all || []).filter(r => audioCount(r) > 0 && r.status !== "Pseudo-Release");
   const official = rels.filter(r => r.status === "Official");
   if (official.length) rels = official;
-  if (!rels.length) return [];
-  // the standard edition: the most common track count (smaller wins ties), then the earliest release
+  if (!rels.length) return null;
+  const lang = r => r["text-representation"]?.language || "";
+  const langs = new Map();
+  for (const r of rels) { const l = lang(r); if (l && l !== "mul" && l !== "zxx") langs.set(l, (langs.get(l) || 0) + 1); }
+  if (langs.size) {
+    const main = [...langs.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    const same = rels.filter(r => !lang(r) || lang(r) === main || lang(r) === "mul");
+    if (same.length) rels = same;
+  }
+  if (country) {
+    const home = rels.filter(r => r.country === country || (r["release-events"] || []).some(e => (e.area?.["iso-3166-1-codes"] || []).includes(country)));
+    if (home.length) rels = home;
+  }
   const freq = new Map();
   for (const r of rels) { const c = audioCount(r); freq.set(c, (freq.get(c) || 0) + 1); }
   const target = [...freq.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0][0];
-  const pick = rels.filter(r => audioCount(r) === target).sort((a, b) => (a.date || "9999").localeCompare(b.date || "9999"))[0];
+  return rels.filter(r => audioCount(r) === target).sort((a, b) => (a.date || "9999").localeCompare(b.date || "9999"))[0];
+}
+async function tracksOf(rgId, signal, country) {
+  const d = await mb(`release?release-group=${rgId}&inc=media&limit=100`, signal);
+  const pick = pickRelease(d.releases, country);
+  if (!pick) return [];
   const rel = await mb(`release/${pick.id}?inc=recordings`, signal);
   const out = [];
   for (const m of rel.media || []) {
@@ -744,7 +764,7 @@ let dctl = null;
 async function openArtist(a) {
   sctl?.abort();
   dctl?.abort(); dctl = new AbortController();
-  state.artist = { id: a.id, name: a.name, dis: a.dis }; state.albums = []; state.mode = "all"; state.t = null; state.phase = "albums";
+  state.artist = { id: a.id, name: a.name, dis: a.dis, country: /^[A-Z]{2}$/.test(a.country) ? a.country : "" }; state.albums = []; state.mode = "all"; state.t = null; state.phase = "albums";
   $("albumFilter").value = "";
   render(); window.scrollTo({ top: 0 });
   const st = $("discoStatus");
@@ -962,7 +982,7 @@ async function fetchTracks() {
     for (const a of todo) {
       launchMsg = `${done + 1} / ${todo.length} : ${a.title}`; renderLaunch();
       try {
-        const tr = await tracksOf(a.id, tctl.signal);
+        const tr = await tracksOf(a.id, tctl.signal, state.artist?.country);
         a.tracks = tr.map(t => ({ t, on: true })); a.missing = !tr.length;
       } catch (e) { if (e?.name === "AbortError") throw e; failed++; }
       done++; save(); renderAlbums();
@@ -1284,9 +1304,9 @@ async function makePoster() {
   x.fillStyle = "#F1F2F5"; x.fillRect(0, 0, W, H);
   x.fillStyle = "rgba(255,62,165,.18)";
   for (let yy = 0; yy < 260; yy += 14) for (let xx = W - 260; xx < W; xx += 14) { const r = Math.max(0, 4 - Math.hypot(W - xx, yy) / 70); if (r > .3) { x.beginPath(); x.arc(xx, yy, r, 0, 7); x.fill(); } }
-  x.fillStyle = "#62617A"; x.font = `500 22px ${M}`; x.fillText(fit(x, t.daily ? "DÉFI DU JOUR · " + t.daily.album.toUpperCase() + " · DISCODUEL" : "MON CLASSEMENT · DISCODUEL", W - 2 * P), P, P + 18);
+  x.fillStyle = "#62617A"; x.font = `500 22px ${M}`; x.fillText(fit(x, t.daily ? "DÉFI DU JOUR · " + t.daily.album + " · DISCODUEL" : "MON CLASSEMENT · DISCODUEL", W - 2 * P), P, P + 18);
   let fs = 150; x.font = `900 ${fs}px ${D}`;
-  const name = artist.toUpperCase();
+  const name = artist;
   while (fs > 56 && x.measureText(name).width > W - 2 * P) { fs -= 4; x.font = `900 ${fs}px ${D}`; }
   const ny = P + 40 + fs * .8;
   x.fillStyle = "#FF3EA5"; x.fillText(name, P + 5, ny + 4);
@@ -1302,7 +1322,7 @@ async function makePoster() {
     x.font = `900 84px ${D}`; x.fillStyle = "#0078BF"; x.fillText(String(i + 1), cx + 16, cy + cw + 78);
     x.fillStyle = "#FF3EA5"; x.fillText(String(i + 1), cx + 13, cy + cw + 75);
     x.fillStyle = "#1D1B3A"; x.font = `800 34px ${D}`;
-    wrap(x, it.title.toUpperCase(), cw - 84, 3).forEach((l, k) => x.fillText(l, cx + 70, cy + cw + 30 + k * 32));
+    wrap(x, it.title, cw - 84, 3).forEach((l, k) => x.fillText(l, cx + 70, cy + cw + 30 + k * 32));
     x.fillStyle = "#62617A"; x.font = `400 17px ${M}`;
     x.fillText(fit(x, [it.album, it.year, plural(PS.W[it.id], "vote")].filter(Boolean).join(" · "), cw - 32), cx + 16, cy + cardH - 18);
   }
